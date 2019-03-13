@@ -14,7 +14,7 @@ testedFile:=Test/main
 # object folder. pattern: %/
 # replace the % with the foldername. If the files should be in the active folder, then you should use an empty string without the terminating /.
 objectFolder:=target/src/
-testFolder:=target/Test/
+testFolder:=target/test/
 
 # list of includes separated with spaces and without file ending
 includes:=Test/include1 Test/include2

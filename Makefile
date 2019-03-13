@@ -17,17 +17,22 @@ objectFolder:=target/src/
 testFolder:=target/test/
 
 # list of includes separated with spaces and without file ending
-includes:=Test/include1 Test/include2
+includes:=
+#Test/include1 Test/include2
 # compiler flags for include files e.g. -lm
 includeCFlags:=
 
+# resources
+# list all online or offline ressource urls in the following variable
+ressources:=https://github.com/Tobiasloch/CUnit/blob/master/include1.o https://github.com/Tobiasloch/CUnit/blob/master/include2.o
+
 default:
 	$(info The make call should call the following targets: make [validate|compile|test|commit|deploy])
-	$(info $(patsubst %,$(objectFolder)%.o,$(notdir $(includes))) $(objectFolder)$(notdir $(testedFile)).o $(testFolder)$(notdir $(unit)).o)
+	$(info $(notdir https://github.com/Tobiasloch/CUnit/blob/master/Assertions.c))
 	exit
 
 # compiling targets
-compile: validate checkObjectFolder checkTestFolder compileIncludes testedFile assertionsFile testFile
+compile: validate checkObjectFolder checkTestFolder compileIncludes testedFile testFile
 	$(info compiling was successful!\n)
 	
 # compiler calls
@@ -44,8 +49,11 @@ compileIncludes: $(filter %,$(includes))
 
 $(filter %,$(includes)): %: %.c
 	$(CC) -c $@.c $(includeCFlags) -o $(objectFolder)$(notdir $@).o
-
-validate:
+	
+$(filter %,$(ressources)): %:
+	wget -P $(objectFolder) $@
+	
+validate:$(filter %,$(ressources))
 	$(info validating was successful!\n)
 
 test: compile
@@ -62,7 +70,7 @@ commit:test
 	git add $(testFolder)
 	git add Makefile
 	git diff-index --quiet HEAD || git commit
-	$(info installing was successful!\n)
+	$(info committing was successful!\n)
 	
 deploy: commit
 	git push
